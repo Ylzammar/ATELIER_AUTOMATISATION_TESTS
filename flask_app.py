@@ -1,16 +1,32 @@
-from flask import Flask, render_template_string, render_template, jsonify, request, redirect, url_for, session
-from flask import render_template
-from flask import json
-from urllib.request import urlopen
-from werkzeug.utils import secure_filename
-import sqlite3
+from flask import Flask, render_template
+import requests
 
 app = Flask(__name__)
 
-@app.get("/")
-def consignes():
-     return render_template('consignes.html')
+# L'URL de l'API qu'on va tester
+API_URL = "https://api.quotable.io/random"
 
-if __name__ == "__main__":
-    # utile en local uniquement
-    app.run(host="0.0.0.0", port=5000, debug=True)
+@app.route('/')
+def home():
+    try:
+        # On tente d'appeler l'API
+        response = requests.get(API_URL, timeout=5)
+        
+        # Si le code est 200, l'API est en ligne (UP)
+        if response.status_code == 200:
+            status = "UP ✅"
+            data = response.json()
+            message = f"Citation du moment : {data['content']} — {data['author']}"
+        else:
+            status = f"DOWN ❌ (Code: {response.status_code})"
+            message = "L'API répond mais avec une erreur."
+            
+    except Exception as e:
+        # Si on n'arrive même pas à joindre l'API
+        status = "DOWN ❌"
+        message = f"Erreur de connexion : {str(e)}"
+
+    return render_template('index.html', status=status, message=message)
+
+if __name__ == '__main__':
+    app.run(debug=True)
