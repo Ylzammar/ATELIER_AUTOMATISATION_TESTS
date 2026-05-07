@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Moniteur d'API</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; }
+        .status { font-size: 24px; font-weight: bold; padding: 20px; border-radius: 10px; display: inline-block; }
+        .up { background-color: #d4edda; color: #155724; }
+        .down { background-color: #f8d7da; color: #721c24; }
+        .info { margin-top: 20px; color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Statut de l'API Citations</h1>
+    
+    <div class="status {{ 'up' if '✅' in status else 'down' }}">
+        L'API est : {{ status }}
+    </div>
+
+    <p class="info">{{ message }}</p>
+
+    <hr>
+    <small>Déployé automatiquement via GitHub Actions 🚀</small>
+</body>
+</html>
